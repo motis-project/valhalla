@@ -1,0 +1,68 @@
+[protobuf]
+  url=git@github.com:motis-project/protobuf.git
+  branch=master
+  commit=e4d1f574ea9793308da9a942b4d5c1d4628aaed6
+[OSM-binary]
+  url=git@github.com:motis-project/OSM-binary.git
+  branch=master
+  commit=1c1a121bb35658df29a2932e53d15fb3999a3196
+[rapidjson]
+  url=git@github.com:motis-project/rapidjson.git
+  branch=master
+  commit=9ece673b648b19d0f1995b82d402c9a6fc0eb277
+[dirent]
+  url=git@github.com:motis-project/dirent.git
+  branch=master
+  commit=0d9aed5c26b572c0eb24c9e4da54159891441279
+[date]
+  url=git@github.com:motis-project/date.git
+  branch=master
+  commit=38d0b684c7fc3796b2c7f887c7dde8d6493b062f
+[googletest]
+  url=git@github.com:motis-project/googletest.git
+  branch=master
+  commit=34a46558609e05865c197f0260ab36daa7cbbb6e
+[osmium]
+  url=git@github.com:motis-project/libosmium.git
+  branch=master
+  commit=bc09725a4636d5036bfed30de2db0764cdff2de9
+[protozero]
+  url=git@github.com:motis-project/protozero.git
+  branch=master
+  commit=8c9f3fa97c2cfdceef86d0b61818ae98e9328f29
+[microtar]
+  url=git@github.com:motis-project/microtar.git
+  branch=master
+  commit=c71afe40887ae1a187ec24cedd85c765058d9978
+[benchmark]
+  url=git@github.com:motis-project/benchmark.git
+  branch=master
+  commit=94dc64692fa7e1feb361f5b6b3277fc982953afd
+[robin-hood-hashing]
+  url=git@github.com:motis-project/robin-hood-hashing.git
+  branch=master
+  commit=bd632059ea0bb5cf444b33bdfb4eba2118300c62
+[cpp-statsd-client]
+  url=git@github.com:motis-project/cpp-statsd-client.git
+  branch=master
+  commit=b60bc7bb930df664b4ab9573ad8bee80d29dc72d
+[lz4]
+  url=git@github.com:motis-project/lz4.git
+  branch=dev
+  commit=c4765545ebb14b0a56c663e21923166923f8280e
+[cxxopts]
+  url=git@github.com:motis-project/cxxopts.git
+  branch=master
+  commit=120205ac5a61d7e715f184fce0328ac5eb3d6712
+[just_gtfs]
+  url=git@github.com:motis-project/just_gtfs.git
+  branch=master
+  commit=94b35eea71c09aefccf994c28ee7d373de4460e6
+[zlib]
+  url=git@github.com:motis-project/zlib.git
+  branch=master
+  commit=8e7c86d3a0e49101b9a67d74c4a07345dcb0e485
+[boost]
+  url=git@github.com:motis-project/boost.git
+  branch=master
+  commit=ad6cbb38470efd74265715e0972cb5ae44527fb1

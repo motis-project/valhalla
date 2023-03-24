@@ -18,24 +18,24 @@ set(VALHALLA_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
 list(INSERT CMAKE_MODULE_PATH 0 ${VALHALLA_SOURCE_DIR}/cmake)
 
 set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ language version to use (default is 17)")
-option(ENABLE_TOOLS "Enable Valhalla tools" ON)
-option(ENABLE_DATA_TOOLS "Enable Valhalla data tools" ON)
-option(ENABLE_SERVICES "Enable Valhalla services" ON)
-option(ENABLE_HTTP "Enable the use of CURL" ON)
-option(ENABLE_PYTHON_BINDINGS "Enable Python bindings" ON)
-option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" ON)
+option(ENABLE_TOOLS "Enable Valhalla tools" OFF)
+option(ENABLE_DATA_TOOLS "Enable Valhalla data tools" OFF)
+option(ENABLE_SERVICES "Enable Valhalla services" OFF)
+option(ENABLE_HTTP "Enable the use of CURL" OFF)
+option(ENABLE_PYTHON_BINDINGS "Enable Python bindings" OFF)
+option(ENABLE_CCACHE "Speed up incremental rebuilds via ccache" OFF)
 option(ENABLE_COVERAGE "Build with coverage instrumentalisation" OFF)
 option(ENABLE_COMPILER_WARNINGS "Build with compiler warnings" OFF)
 option(ENABLE_SANITIZERS "Use all the integrated sanitizers for Debug build" OFF)
 option(ENABLE_ADDRESS_SANITIZER "Use memory sanitizer for Debug build" OFF)
 option(ENABLE_UNDEFINED_SANITIZER "Use UB sanitizer for Debug build" OFF)
-option(ENABLE_TESTS "Enable Valhalla tests" ON)
+option(ENABLE_TESTS "Enable Valhalla tests" OFF)
 option(ENABLE_WERROR "Convert compiler warnings to errors. Requires ENABLE_COMPILER_WARNINGS=ON to take effect" OFF)
-option(ENABLE_BENCHMARKS "Enable microbenchmarking" ON)
+option(ENABLE_BENCHMARKS "Enable microbenchmarking" OFF)
 option(ENABLE_THREAD_SAFE_TILE_REF_COUNT "If ON uses shared_ptr as tile reference(i.e. it is thread safe)" OFF)
-option(ENABLE_SINGLE_FILES_WERROR "Convert compiler warnings to errors for single files" ON)
+option(ENABLE_SINGLE_FILES_WERROR "Convert compiler warnings to errors for single files" OFF)
 # useful to workaround issues likes this https://stackoverflow.com/questions/24078873/cmake-generated-xcode-project-wont-compile
-option(ENABLE_STATIC_LIBRARY_MODULES "If ON builds Valhalla modules as STATIC library targets" OFF)
+option(ENABLE_STATIC_LIBRARY_MODULES "If ON builds Valhalla modules as STATIC library targets" ON)
 
 set(LOGGING_LEVEL "" CACHE STRING "Logging level, default is INFO")
 set_property(CACHE LOGGING_LEVEL PROPERTY STRINGS "NONE;ALL;ERROR;WARN;INFO;DEBUG;TRACE")
@@ -129,33 +129,39 @@ if(ENABLE_COVERAGE)
   set_target_properties(coverage PROPERTIES FOLDER "Tests")
 endif()
 
+include(cmake/pkg.cmake)
+
 ## Dependencies
 find_package(Threads REQUIRED)
-find_package(ZLIB REQUIRED)
 
-# try to find an installed boost or install locally with conan
-set(boost_VERSION "1.71")
-find_package(Boost ${boost_VERSION} QUIET)
-if (NOT Boost_FOUND)
-  # bail if there's no conan installed
-  message(STATUS "No compatible boost version detected, using conan...")
-  find_program(conan_FOUND conan)
-  if (NOT conan_FOUND)
-    message(FATAL_ERROR "conan needs to be installed for boost, see https://docs.conan.io/en/latest/installation.html.")
+if (FALSE)
+  find_package(ZLIB REQUIRED)
+
+  # try to find an installed boost or install locally with conan
+  set(boost_VERSION "1.71")
+  find_package(Boost ${boost_VERSION} QUIET)
+  if (NOT Boost_FOUND)
+    # bail if there's no conan installed
+    message(STATUS "No compatible boost version detected, using conan...")
+    find_program(conan_FOUND conan)
+    if (NOT conan_FOUND)
+      message(FATAL_ERROR "conan needs to be installed for boost, see https://docs.conan.io/en/latest/installation.html.")
+    endif()
+
+    # build dir needs to be added, that's where conan writes some info
+    list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
+    list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
+    include(${VALHALLA_SOURCE_DIR}/cmake/conan.cmake)
+
+    conan_cmake_autodetect(settings)
+    conan_cmake_install(PATH_OR_REFERENCE ${VALHALLA_SOURCE_DIR}/conanfile.txt
+                        REMOTE conancenter
+                        SETTINGS ${settings}
+                        OUTPUT_QUIET)
   endif()
-
-  # build dir needs to be added, that's where conan writes some info
-  list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
-  list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
-  include(${VALHALLA_SOURCE_DIR}/cmake/conan.cmake)
-
-  conan_cmake_autodetect(settings)
-  conan_cmake_install(PATH_OR_REFERENCE ${VALHALLA_SOURCE_DIR}/conanfile.txt
-                      REMOTE conancenter
-                      SETTINGS ${settings}
-                      OUTPUT_QUIET)
+  find_package(Boost ${boost_VERSION} REQUIRED)
 endif()
-find_package(Boost ${boost_VERSION} REQUIRED)
+
 add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
 add_definitions(-DBOOST_ALLOW_DEPRECATED_HEADERS)
 add_definitions(-DBOOST_BIND_GLOBAL_PLACEHOLDERS)
@@ -179,8 +185,10 @@ else()
   message(STATUS "Using curl from the outside")
 endif()
 
-if(NOT Protobuf_FOUND)
-  find_package(Protobuf REQUIRED)
+if (0)
+  if(NOT Protobuf_FOUND)
+    find_package(Protobuf REQUIRED)
+  endif()
 endif()
 
 message(STATUS "Using pbf headers from ${PROTOBUF_INCLUDE_DIR}")

@@ -69,7 +69,6 @@ valhalla_module(NAME mjolnir
       ${VALHALLA_SOURCE_DIR}
       ${VALHALLA_SOURCE_DIR}/valhalla
       ${VALHALLA_SOURCE_DIR}/third_party/date/include
-      ${VALHALLA_SOURCE_DIR}/third_party/rapidjson/include
       $<$<BOOL:${WIN32}>:${VALHALLA_SOURCE_DIR}/third_party/dirent/include>
       ${PROTOBUF_INCLUDE_DIR}
    PRIVATE
@@ -81,8 +80,9 @@ valhalla_module(NAME mjolnir
     valhalla::baldr
     SpatiaLite::SpatiaLite
     SQLite3::SQLite3
-    Boost::boost
+    boost
     Lua::Lua
     Threads::Threads
-    ZLIB::ZLIB
-    robin_hood::robin_hood)
+    zlibstatic
+    robin_hood::robin_hood
+    rapidjson)

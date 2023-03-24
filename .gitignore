@@ -61,6 +61,7 @@ CMakeLists.txt.user
 /CMakeSettings.json
 .idea
 /.tidytmp
+/deps
 
 # python
 .venv

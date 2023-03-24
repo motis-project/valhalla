@@ -108,7 +108,7 @@ function(valhalla_module)
        ${VALHALLA_BINARY_DIR}
        ${VALHALLA_BINARY_DIR}/valhalla)
   
-  target_link_libraries(${library} Boost::boost)
+  target_link_libraries(${library} ${MODULE_DEPENDS})
 
   if(ENABLE_COVERAGE)
     target_compile_options(${library} PUBLIC -ftest-coverage -fprofile-arcs)
@@ -135,18 +135,6 @@ function(valhalla_module)
     set_property(TARGET ${library} PROPERTY POSITION_INDEPENDENT_CODE ON)
   endif()
 
-  ## Save properties of external dependencies and target objects to propagate to valhalla target
-  string(REGEX REPLACE "(valhalla::[^;]+)" "" external_module_depends "${MODULE_DEPENDS}")
-  string(REGEX REPLACE "([^;]+)" "$<TARGET_PROPERTY:\\1,INTERFACE_COMPILE_DEFINITIONS>" external_compile_definitions "${external_module_depends}")
-  string(REGEX REPLACE "([^;]+)" "$<TARGET_PROPERTY:\\1,INTERFACE_INCLUDE_DIRECTORIES>" external_include_directories "${external_module_depends}")
-  target_compile_definitions(${library} PRIVATE ${external_compile_definitions})
-  target_include_directories(${library} PRIVATE ${external_include_directories})
-  foreach(dep "${MODULE_DEPENDS}")
-    if("${dep}" MATCHES "^valhalla::")
-      add_dependencies(${library} ${dep})
-    endif()
-  endforeach()
-
   set(libvalhalla_compile_definitions "${libvalhalla_compile_definitions};$<TARGET_PROPERTY:${library},COMPILE_DEFINITIONS>" CACHE INTERNAL "")
   set(libvalhalla_compile_options "${libvalhalla_compile_options};$<TARGET_PROPERTY:${library},COMPILE_OPTIONS>" CACHE INTERNAL "")
   set(libvalhalla_include_directories "${libvalhalla_include_directories};$<TARGET_PROPERTY:${library},INCLUDE_DIRECTORIES>" CACHE INTERNAL "")
@@ -158,9 +146,7 @@ function(valhalla_module)
   endif()
 endfunction()
 
-add_subdirectory(${VALHALLA_SOURCE_DIR}/third_party/robin-hood-hashing ${CMAKE_BINARY_DIR}/third_party/robin-hood-hashing)
 SET(CPP_STATSD_STANDALONE OFF CACHE BOOL "ignore test targets" FORCE)
-add_subdirectory(${VALHALLA_SOURCE_DIR}/third_party/cpp-statsd-client ${CMAKE_BINARY_DIR}/third_party/cpp-statsd-client)
 
 add_subdirectory(../proto ${CMAKE_CURRENT_BINARY_DIR}/valhalla/proto)
 add_subdirectory(baldr)
@@ -229,10 +215,6 @@ target_include_directories(valhalla
     ${VALHALLA_SOURCE_DIR}/valhalla # TODO: this path must be removed and changed to #include <valhalla/...> in headers
     ${VALHALLA_BINARY_DIR}
     ${VALHALLA_BINARY_DIR}/valhalla  # TODO: this path must be removed and changed to #include <valhalla/...> in headers
-    ${VALHALLA_SOURCE_DIR}/third_party/rapidjson/include
-    ${VALHALLA_SOURCE_DIR}/third_party/date/include
-    ${VALHALLA_SOURCE_DIR}/third_party/cpp-statsd-client/include
-    $<$<BOOL:${WIN32}>:${VALHALLA_SOURCE_DIR}/third_party/dirent/include>
   PRIVATE
     ${libvalhalla_include_directories})
 

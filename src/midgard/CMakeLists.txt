@@ -20,7 +20,6 @@ valhalla_module(NAME midgard
     PUBLIC
       ${VALHALLA_SOURCE_DIR}
       ${VALHALLA_SOURCE_DIR}/valhalla
-      $<$<BOOL:${WIN32}>:${VALHALLA_SOURCE_DIR}/third_party/dirent/include>
   DEPENDS
-    Boost::boost
+    boost
     robin_hood::robin_hood)

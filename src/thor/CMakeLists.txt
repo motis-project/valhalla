@@ -40,13 +40,13 @@ valhalla_module(NAME thor
       ${VALHALLA_SOURCE_DIR}/third_party/date/include
       $<$<BOOL:${WIN32}>:${VALHALLA_SOURCE_DIR}/third_party/dirent/include>
     PRIVATE
-      ${VALHALLA_SOURCE_DIR}/third_party/rapidjson/include
       ${CMAKE_BINARY_DIR}
   DEPENDS
     valhalla::proto
     valhalla::sif
     valhalla::meili
     ${valhalla_protobuf_targets}
-    Boost::boost
+    boost
     libprime_server
-    robin_hood::robin_hood)
+    robin_hood::robin_hood
+    rapidjson)

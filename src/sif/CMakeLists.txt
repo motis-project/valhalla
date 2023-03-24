@@ -28,4 +28,5 @@ valhalla_module(NAME sif
     valhalla::baldr
     valhalla::proto
     ${valhalla_protobuf_targets}
-    Boost::boost)
+    boost
+    rapidjson)

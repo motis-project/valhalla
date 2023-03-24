@@ -28,9 +28,6 @@ file(GLOB headers ${VALHALLA_SOURCE_DIR}/valhalla/baldr/*.h)
 set(includes
     ${VALHALLA_SOURCE_DIR}
      ${VALHALLA_SOURCE_DIR}/valhalla
-     $<$<BOOL:${WIN32}>:${VALHALLA_SOURCE_DIR}/third_party/dirent/include>
-     ${VALHALLA_SOURCE_DIR}/third_party/rapidjson/include
-     ${VALHALLA_SOURCE_DIR}/third_party/date/include
      ${CMAKE_CURRENT_BINARY_DIR}/src/baldr
      )
 
@@ -119,6 +116,9 @@ valhalla_module(NAME baldr
     valhalla::midgard
     valhalla::proto
     ${valhalla_protobuf_targets}
-    Boost::boost
+    boost
     CURL::CURL
-    ZLIB::ZLIB)
+    zlibstatic
+    date
+    date-tz
+    rapidjson)
