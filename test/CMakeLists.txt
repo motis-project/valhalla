@@ -8,15 +8,7 @@ set(TEST_SRCS test.h test.cc)
 if(ENABLE_DATA_TOOLS)
   list(APPEND TEST_SRCS gurka/gurka.h gurka/gurka.cc)
 endif()
-add_library(valhalla_test
-  ${TEST_SRCS}
-  ${VALHALLA_SOURCE_DIR}/third_party/microtar/src/microtar.h
-  ${VALHALLA_SOURCE_DIR}/third_party/microtar/src/microtar.c
-  ${VALHALLA_SOURCE_DIR}/third_party/lz4/lib/lz4.c
-  ${VALHALLA_SOURCE_DIR}/third_party/lz4/lib/lz4hc.c
-  ${VALHALLA_SOURCE_DIR}/third_party/lz4/lib/lz4frame.c
-  ${VALHALLA_SOURCE_DIR}/third_party/lz4/lib/xxhash.c
-  )
+add_library(valhalla_test ${TEST_SRCS})
 target_include_directories(valhalla_test PUBLIC
   ${VALHALLA_SOURCE_DIR}/test
   ${VALHALLA_SOURCE_DIR}/test/gurka
@@ -25,7 +17,7 @@ target_include_directories(valhalla_test PUBLIC
   ${VALHALLA_SOURCE_DIR}/third_party/just_gtfs/include
   ${VALHALLA_SOURCE_DIR}/third_party/libosmium/include
   ${VALHALLA_SOURCE_DIR}/third_party/microtar/src)
-target_link_libraries(valhalla_test valhalla gtest gtest_main gmock pthread)
+target_link_libraries(valhalla_test valhalla gtest gtest_main gmock pthread microtar lz4 xxhash)
 
 if(ENABLE_DATA_TOOLS)
   target_link_libraries(valhalla_test GEOS::GEOS)
@@ -66,7 +58,7 @@ if(NOT APPLE)
 endif()
 
 if (UNIX AND ENABLE_SINGLE_FILES_WERROR)
-  # Enables stricter compiler checks on a file-by-file basis
+  # Enables stricter compiler valhalla-checks on a file-by-file basis
   # which allows us to migrate piecemeal
   set_source_files_properties(
     openlr.cc
@@ -77,17 +69,17 @@ endif()
 
 ## Add executable targets
 foreach(test ${tests})
-  add_executable(${test} EXCLUDE_FROM_ALL ${test}.cc )
-  set_target_properties(${test} PROPERTIES FOLDER "Tests")
-  target_compile_definitions(${test} PRIVATE
+  add_executable(valhalla-${test} EXCLUDE_FROM_ALL ${test}.cc )
+  set_target_properties(valhalla-${test} PROPERTIES FOLDER "Tests")
+  target_compile_definitions(valhalla-${test} PRIVATE
       VALHALLA_SOURCE_DIR="${VALHALLA_SOURCE_DIR}/"
       VALHALLA_BUILD_DIR="${VALHALLA_BUILD_DIR}/")
   create_source_groups("Source Files" ${test}.cc)
-  target_link_libraries(${test} valhalla_test)
+  target_link_libraries(valhalla-${test} valhalla_test)
   if (LUAJIT_FOUND AND APPLE AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
     # Using LuaJIT on macOS on Intel processors requires a couple of extra linker flags
     # Any tool that needs interact with Lua will need these flags on macOS
-    target_link_options(${test} PUBLIC -pagezero_size 10000 -image_base 100000000)
+    target_link_options(valhalla-${test} PUBLIC -pagezero_size 10000 -image_base 100000000)
   endif()
 endforeach()
 
@@ -112,7 +104,7 @@ foreach(test ${tyr_tests})
 endforeach()
 
 ## Test-specific data, properties and dependencies
-set_target_properties(logging PROPERTIES COMPILE_DEFINITIONS LOGGING_LEVEL_ALL)
+set_target_properties(valhalla-logging PROPERTIES COMPILE_DEFINITIONS LOGGING_LEVEL_ALL)
 
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/test/data/tz.sqlite
   DEPENDS ${VALHALLA_SOURCE_DIR}/scripts/valhalla_build_timezones
@@ -369,8 +361,8 @@ endif()
 ## High-level targets
 string(REGEX REPLACE "([^;]+)" "run-\\1" test_targets "${tests};${cost_tests};${tyr_tests};${python_tests}")
 
-add_custom_target(check DEPENDS ${test_targets})
-set_target_properties(check PROPERTIES FOLDER "Tests")
+add_custom_target(valhalla-check DEPENDS ${test_targets})
+set_target_properties(valhalla-check PROPERTIES FOLDER "Tests")
 add_custom_target(tests DEPENDS ${tests} ${cost_tests} ${tyr_tests})
 set_target_properties(tests PROPERTIES FOLDER "Tests")
 add_subdirectory(gurka)
