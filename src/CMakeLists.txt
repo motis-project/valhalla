@@ -82,6 +82,8 @@ function(valhalla_module)
   endif()
   list(APPEND MODULE_SOURCES ${MODULE_SOURCES_WITH_WARNINGS})
 
+  message(STATUS "adding valhalla-${MODULE_NAME}")
+
   set(library valhalla-${MODULE_NAME})
   if (ENABLE_STATIC_LIBRARY_MODULES)
     add_library(${library} STATIC ${MODULE_SOURCES} ${MODULE_HEADERS})
@@ -158,9 +160,7 @@ add_subdirectory(sif)
 add_subdirectory(skadi)
 add_subdirectory(thor)
 add_subdirectory(tyr)
-if(ENABLE_DATA_TOOLS)
-  add_subdirectory(mjolnir)
-endif()
+add_subdirectory(mjolnir)
 
 ## libvalhalla
 

@@ -12,15 +12,6 @@ set(protobuf_descriptors
   incidents.proto
   status.proto)
 
-if(ENABLE_DATA_TOOLS)
-  # Only mjolnir needs the OSM PBF descriptors
-  list(APPEND protobuf_descriptors
-    ${VALHALLA_SOURCE_DIR}/third_party/OSM-binary/src/fileformat.proto
-    ${VALHALLA_SOURCE_DIR}/third_party/OSM-binary/src/osmformat.proto)
-endif()
-
-#protobuf_generate_cpp(protobuf_srcs protobuf_hdrs ${protobuf_descriptors})
-
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/api.pb.cc
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/common.pb.cc
@@ -33,9 +24,12 @@ add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/transit_fetch.pb.cc
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/incidents.pb.cc
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/status.pb.cc
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/fileformat.pb.cc
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/osmformat.pb.cc
   COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:protoc>
     --cpp_out=${CMAKE_CURRENT_BINARY_DIR}
     --proto_path=${CMAKE_CURRENT_SOURCE_DIR}
+    --proto_path=${CMAKE_SOURCE_DIR}/deps/OSM-binary/osmpbf
     ${CMAKE_CURRENT_SOURCE_DIR}/api.proto
     ${CMAKE_CURRENT_SOURCE_DIR}/common.proto
     ${CMAKE_CURRENT_SOURCE_DIR}/directions.proto
@@ -47,6 +41,8 @@ add_custom_command(
     ${CMAKE_CURRENT_SOURCE_DIR}/transit_fetch.proto
     ${CMAKE_CURRENT_SOURCE_DIR}/incidents.proto
     ${CMAKE_CURRENT_SOURCE_DIR}/status.proto
+    ${CMAKE_SOURCE_DIR}/deps/OSM-binary/osmpbf/fileformat.proto
+    ${CMAKE_SOURCE_DIR}/deps/OSM-binary/osmpbf/osmformat.proto
   DEPENDS protoc
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/api.proto
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/common.proto
@@ -59,6 +55,8 @@ add_custom_command(
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/transit_fetch.proto
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/incidents.proto
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/status.proto
+  DEPENDS ${CMAKE_SOURCE_DIR}/deps/OSM-binary/osmpbf/fileformat.proto
+  DEPENDS ${CMAKE_SOURCE_DIR}/deps/OSM-binary/osmpbf/osmformat.proto
   COMMENT "Generating Protobuf C++ Files"
 )
 
@@ -74,7 +72,9 @@ add_library(valhalla-proto STATIC
     ${CMAKE_CURRENT_BINARY_DIR}/transit_fetch.pb.cc
     ${CMAKE_CURRENT_BINARY_DIR}/incidents.pb.cc
     ${CMAKE_CURRENT_BINARY_DIR}/status.pb.cc
+    ${CMAKE_CURRENT_BINARY_DIR}/fileformat.pb.cc
+    ${CMAKE_CURRENT_BINARY_DIR}/osmformat.pb.cc
 )
 add_library(valhalla::proto ALIAS valhalla-proto)
-target_include_directories(valhalla-proto PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(valhalla-proto PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/../..)
 target_link_libraries(valhalla-proto PUBLIC protobuf::libprotobuf)

@@ -66,3 +66,7 @@
   url=git@github.com:motis-project/boost.git
   branch=master
   commit=ad6cbb38470efd74265715e0972cb5ae44527fb1
+[lua]
+  url=git@github.com:motis-project/lua.git
+  branch=master
+  commit=7bb93325b26f84c7e8b51fcbd857361ce7605a1d

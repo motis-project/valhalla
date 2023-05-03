@@ -76,13 +76,14 @@ valhalla_module(NAME mjolnir
       ${CMAKE_CURRENT_BINARY_DIR}/valhalla
       ${VALHALLA_SOURCE_DIR}/third_party/just_gtfs/include
   DEPENDS
-    valhalla::proto
+    valhalla-proto
     valhalla::baldr
-    SpatiaLite::SpatiaLite
-    SQLite3::SQLite3
+#    SpatiaLite::SpatiaLite
+#    SQLite3::SQLite3
     boost
-    Lua::Lua
+    lua
     Threads::Threads
     zlibstatic
     robin_hood::robin_hood
-    rapidjson)
+    rapidjson
+    just_gtfs)
