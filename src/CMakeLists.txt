@@ -91,6 +91,7 @@ function(valhalla_module)
     add_library(${library} OBJECT ${MODULE_SOURCES} ${MODULE_HEADERS})
   endif()
   add_library(valhalla::${MODULE_NAME} ALIAS ${library})
+  target_compile_features(${library} PUBLIC cxx_std_17)
   set_target_properties(${library} PROPERTIES FOLDER "Modules")
 
   # Generate source groups so the files are properly sorted in IDEs like Xcode.

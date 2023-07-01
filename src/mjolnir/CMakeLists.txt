@@ -78,8 +78,7 @@ valhalla_module(NAME mjolnir
   DEPENDS
     valhalla-proto
     valhalla::baldr
-#    SpatiaLite::SpatiaLite
-#    SQLite3::SQLite3
+    spatialite
     boost
     lua
     Threads::Threads
