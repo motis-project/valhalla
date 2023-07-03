@@ -124,6 +124,8 @@ void thor_worker_t::trace_route(Api& request) {
       }
       // clang-format on
       break;
+
+    default:;
   }
 }
 
