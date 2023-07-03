@@ -106,6 +106,8 @@ std::string thor_worker_t::trace_attributes(Api& request) {
         }
       }
       break;
+
+    default:;
   }
 
   return tyr::serializeTraceAttributes(request, controller, map_match_results);
