@@ -409,6 +409,7 @@ void DirectionsBuilder::PopulateDirectionsLeg(const Options& options,
         trip_maneuver->set_transit_type(maneuver.transit_type());
         break;
       }
+      default:;
     }
   }
 

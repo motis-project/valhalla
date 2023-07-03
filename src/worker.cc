@@ -1435,6 +1435,7 @@ void service_worker_t::enqueue_statistics(Api& api) const {
         statsd_client->set(stat.key(), static_cast<unsigned int>(stat.value() + 0.5), frequency,
                            statsd_client->tags);
         break;
+      default:;
     }
   }
 
