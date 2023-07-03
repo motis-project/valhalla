@@ -5,7 +5,7 @@
 [OSM-binary]
   url=git@github.com:motis-project/OSM-binary.git
   branch=master
-  commit=a98f10601a982b5fc14bcf84b31c19cdb127415b
+  commit=0be467dc07f2ee5271fb1e61c7c364dd20f29be0
 [rapidjson]
   url=git@github.com:motis-project/rapidjson.git
   branch=master
