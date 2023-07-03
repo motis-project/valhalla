@@ -65,7 +65,7 @@
 [luajit]
   url=git@github.com:motis-project/LuaJIT.git
   branch=v2.1
-  commit=971dac57942440d901a3c1db5859d785dabf0598
+  commit=69cc7fff39e2e54c7baefa99b6554f7a4d638839
 [spatialite]
   url=git@github.com:motis-project/spatialite.git
   branch=master
