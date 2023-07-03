@@ -13,7 +13,7 @@
 [dirent]
   url=git@github.com:motis-project/dirent.git
   branch=master
-  commit=0d9aed5c26b572c0eb24c9e4da54159891441279
+  commit=11a4d8ab1bf5b0123f039127bc75b52b6702779e
 [date]
   url=git@github.com:motis-project/date.git
   branch=master
@@ -73,4 +73,4 @@
 [spatialite]
   url=git@github.com:motis-project/spatialite.git
   branch=master
-  commit=8c39bcdc8b20638d60f8dee400075265c267c99f
+  commit=7b8cd6447ac8632bd2c6c8ff9fbc10151742ef18

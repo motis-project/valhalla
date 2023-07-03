@@ -589,7 +589,7 @@ std::vector<midgard::PointLL> simulate_gps(const std::vector<gps_segment_t>& seg
     lat_adj *= scale * accuracy; // random scale <= accuracy
     noises.emplace_back(std::make_pair(lon_adj, lat_adj));
     // average over last n to smooth
-    std::pair<float, float> noise{0, 0};
+    std::pair<float, float> noise{.0F, .0F};
     std::for_each(noises.begin(), noises.end(), [&noise](const std::pair<float, float>& n) {
       noise.first += n.first;
       noise.second += n.second;

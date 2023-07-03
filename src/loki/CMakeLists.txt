@@ -30,7 +30,6 @@ valhalla_module(NAME loki
       ${VALHALLA_SOURCE_DIR}
       ${VALHALLA_SOURCE_DIR}/valhalla
       ${VALHALLA_SOURCE_DIR}/third_party/date/include
-      $<$<BOOL:${WIN32}>:${VALHALLA_SOURCE_DIR}/third_party/dirent/include>
     PRIVATE
       ${CMAKE_BINARY_DIR}
   DEPENDS
@@ -40,4 +39,5 @@ valhalla_module(NAME loki
     ${valhalla_protobuf_targets}
     boost
     libprime_server
-    rapidjson)
+    rapidjson
+    $<$<BOOL:${WIN32}>:dirent>)

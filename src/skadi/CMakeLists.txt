@@ -10,11 +10,12 @@ valhalla_module(NAME skadi
     PUBLIC
       ${VALHALLA_SOURCE_DIR}
       ${VALHALLA_SOURCE_DIR}/valhalla
-      $<$<BOOL:${WIN32}>:${VALHALLA_SOURCE_DIR}/third_party/dirent/include>
+
     PRIVATE
       ${VALHALLA_SOURCE_DIR}/third_party/lz4/lib
   DEPENDS
     valhalla::baldr
     boost
     zlibstatic
-    lz4_static)
+    lz4_static
+    $<$<BOOL:${WIN32}>:dirent>)

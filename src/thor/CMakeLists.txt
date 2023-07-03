@@ -38,7 +38,6 @@ valhalla_module(NAME thor
       ${VALHALLA_SOURCE_DIR}
       ${VALHALLA_SOURCE_DIR}/valhalla
       ${VALHALLA_SOURCE_DIR}/third_party/date/include
-      $<$<BOOL:${WIN32}>:${VALHALLA_SOURCE_DIR}/third_party/dirent/include>
     PRIVATE
       ${CMAKE_BINARY_DIR}
   DEPENDS
@@ -49,4 +48,5 @@ valhalla_module(NAME thor
     boost
     libprime_server
     robin_hood::robin_hood
-    rapidjson)
+    rapidjson
+    $<$<BOOL:${WIN32}>:dirent>)

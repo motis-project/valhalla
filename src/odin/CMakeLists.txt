@@ -37,7 +37,6 @@ valhalla_module(NAME odin
       ${VALHALLA_SOURCE_DIR}
       ${VALHALLA_SOURCE_DIR}/valhalla
       ${VALHALLA_SOURCE_DIR}/third_party/date/include
-      $<$<BOOL:${WIN32}>:${VALHALLA_SOURCE_DIR}/third_party/dirent/include>
     PRIVATE
       ${VALHALLA_SOURCE_DIR}/third_party/rapidjson/include
       ${CMAKE_CURRENT_BINARY_DIR}
@@ -48,4 +47,5 @@ valhalla_module(NAME odin
     libprime_server
     date
     date-tz
-    rapidjson)
+    rapidjson
+    $<$<BOOL:${WIN32}>:dirent>)
