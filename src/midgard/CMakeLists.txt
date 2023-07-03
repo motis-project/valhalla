@@ -22,4 +22,5 @@ valhalla_module(NAME midgard
       ${VALHALLA_SOURCE_DIR}/valhalla
   DEPENDS
     boost
-    robin_hood::robin_hood)
+    robin_hood::robin_hood
+    $<$<BOOL:${WIN32}>:dirent>)

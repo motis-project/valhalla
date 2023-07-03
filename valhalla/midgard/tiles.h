@@ -230,7 +230,7 @@ public:
    * @return  The latitude, longitude extent of the specified tile.
    */
   AABB2<coord_t> TileBounds(const int32_t tileid) const {
-    Point2 base = Base(tileid);
+    Point2d base = Base(tileid);
     return AABB2<coord_t>(base.x(), base.y(), base.x() + tilesize_, base.y() + tilesize_);
   }
 

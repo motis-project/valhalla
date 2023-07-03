@@ -21,7 +21,6 @@ valhalla_module(NAME sif
       ${VALHALLA_SOURCE_DIR}
       ${VALHALLA_SOURCE_DIR}/valhalla
       ${VALHALLA_SOURCE_DIR}/third_party/date/include
-      $<$<BOOL:${WIN32}>:${VALHALLA_SOURCE_DIR}/third_party/dirent/include>
     PRIVATE
       ${VALHALLA_SOURCE_DIR}/third_party/rapidjson/include
   DEPENDS
@@ -29,4 +28,5 @@ valhalla_module(NAME sif
     valhalla::proto
     ${valhalla_protobuf_targets}
     boost
-    rapidjson)
+    rapidjson
+    $<$<BOOL:${WIN32}>:dirent>)

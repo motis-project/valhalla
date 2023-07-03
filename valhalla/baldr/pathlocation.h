@@ -201,7 +201,7 @@ public:
       l.date_time_ = loc.date_time();
     }
     if (loc.has_heading_case()) {
-      l.heading_ = loc.heading();
+      l.heading_ = static_cast<float>(loc.heading());
     }
     if (loc.has_heading_tolerance_case()) {
       l.heading_tolerance_ = loc.heading_tolerance();
