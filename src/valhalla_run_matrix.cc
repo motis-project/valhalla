@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
     json_str = result["json"].as<std::string>();
 
     iterations = result["multi-run"].as<uint32_t>();
-  } catch (const cxxopts::OptionException& e) {
+  } catch (const std::exception& e) {
     std::cout << "Unable to parse command line options because: " << e.what() << std::endl;
     return EXIT_FAILURE;
   }

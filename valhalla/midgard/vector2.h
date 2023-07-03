@@ -19,7 +19,7 @@ public:
   /**
    * Default constructor
    */
-  VectorXY<PrecisionT>() : x_(0.0), y_(0.0) {
+  VectorXY() : x_(0.0), y_(0.0) {
   }
 
   /**
@@ -27,7 +27,7 @@ public:
    * origin to the point.
    * @param   p  Point.
    */
-  VectorXY<PrecisionT>(const PointXY<PrecisionT>& p) : x_(p.x()), y_(p.y()) {
+  VectorXY(const PointXY<PrecisionT>& p) : x_(p.x()), y_(p.y()) {
   }
 
   /**
@@ -35,7 +35,7 @@ public:
    * @param   x   x component of the vector.
    * @param   y   y component of the vector.
    */
-  VectorXY<PrecisionT>(const PrecisionT x, const PrecisionT y) : x_(x), y_(y) {
+  VectorXY(const PrecisionT x, const PrecisionT y) : x_(x), y_(y) {
   }
 
   /**
@@ -43,7 +43,7 @@ public:
    * @param   from  Point at origin of the vector.
    * @param   to    Point at end of vector
    */
-  VectorXY<PrecisionT>(const PointXY<PrecisionT>& from, const PointXY<PrecisionT>& to)
+  VectorXY(const PointXY<PrecisionT>& from, const PointXY<PrecisionT>& to)
       : x_(to.x() - from.x()), y_(to.y() - from.y()) {
   }
 
@@ -51,7 +51,7 @@ public:
    * Copy constructor.
    * @param   w  Vector to copy to the new vector.
    */
-  VectorXY<PrecisionT>(const VectorXY<PrecisionT>& w) : x_(w.x()), y_(w.y()) {
+  VectorXY(const VectorXY& w) : x_(w.x()), y_(w.y()) {
   }
 
   /**
@@ -59,7 +59,7 @@ public:
    * @param   w  Vector to copy to the current vector.
    * @return  Returns the address of the current vector.
    */
-  VectorXY<PrecisionT>& operator=(const VectorXY<PrecisionT>& w) {
+  VectorXY& operator=(const VectorXY& w) {
     x_ = w.x();
     y_ = w.y();
     return *this;
@@ -133,8 +133,8 @@ public:
    * @param   w  Vector to add to the current vector.
    * @return   Returns the resulting vector.
    */
-  VectorXY<PrecisionT> operator+(const VectorXY<PrecisionT>& w) const {
-    return VectorXY<PrecisionT>(x_ + w.x(), y_ + w.y());
+  VectorXY operator+(const VectorXY& w) const {
+    return VectorXY(x_ + w.x(), y_ + w.y());
   }
 
   /**
@@ -142,7 +142,7 @@ public:
    * @param   w  Vector to add to the current vector.
    * @return  Returns the address of the current vector.
    */
-  VectorXY<PrecisionT>& operator+=(const VectorXY<PrecisionT>& w) {
+  VectorXY& operator+=(const VectorXY& w) {
     x_ += w.x();
     y_ += w.y();
     return *this;
@@ -154,8 +154,8 @@ public:
    * @param   w  Vector to subtract from the current vector.
    * @return   Returns the resulting vector.
    */
-  VectorXY<PrecisionT> operator-(const VectorXY<PrecisionT>& w) const {
-    return VectorXY<PrecisionT>(x_ - w.x(), y_ - w.y());
+  VectorXY operator-(const VectorXY& w) const {
+    return VectorXY(x_ - w.x(), y_ - w.y());
   }
 
   /**
@@ -163,7 +163,7 @@ public:
    * @param   w  Vector to subtract from the current vector.
    * @return  Returns the address of the current vector.
    */
-  VectorXY<PrecisionT>& operator-=(const VectorXY<PrecisionT>& w) {
+  VectorXY& operator-=(const VectorXY& w) {
     x_ -= w.x();
     y_ -= w.y();
     return *this;
@@ -175,8 +175,8 @@ public:
    * @param   scalar   Scalar to muliply the vector with.
    * @return  Returns the resulting vector
    */
-  VectorXY<PrecisionT> operator*(const PrecisionT scalar) const {
-    return VectorXY<PrecisionT>(x_ * scalar, y_ * scalar);
+  VectorXY operator*(const PrecisionT scalar) const {
+    return VectorXY(x_ * scalar, y_ * scalar);
   }
 
   /**
@@ -184,7 +184,7 @@ public:
    * @param   scalar   Scalar to muliply the vector with.
    * @return  Returns the address of the current vector.
    */
-  VectorXY<PrecisionT>& operator*=(const PrecisionT scalar) {
+  VectorXY& operator*=(const PrecisionT scalar) {
     x_ *= scalar;
     y_ *= scalar;
     return *this;
@@ -196,7 +196,7 @@ public:
    * @return  Returns true if vector w equals the current vector,
    *          false otherwise.
    */
-  bool operator==(const VectorXY<PrecisionT>& w) const {
+  bool operator==(const VectorXY& w) const {
     return (x_ == w.x() && y_ == w.y());
   }
 
@@ -206,7 +206,7 @@ public:
    * @param   w  Vector
    * @return  Returns the dot product (a scalar).
    */
-  PrecisionT Dot(const VectorXY<PrecisionT>& w) const {
+  PrecisionT Dot(const VectorXY& w) const {
     return (x_ * w.x() + y_ * w.y());
   }
 
@@ -216,7 +216,7 @@ public:
    * @return  Returns the magnitude of the resulting vector (which is
    *          along the z axis)
    */
-  PrecisionT Cross(const VectorXY<PrecisionT>& w) const {
+  PrecisionT Cross(const VectorXY& w) const {
     return (x_ * w.y() - y_ * w.x());
   }
 
@@ -226,8 +226,8 @@ public:
    *                    If false, get the counter-clockwise oriented
    *                    perpendicular.
    */
-  VectorXY<PrecisionT> GetPerpendicular(const bool clockwise = false) const {
-    return (clockwise) ? VectorXY<PrecisionT>(y_, -x_) : VectorXY<PrecisionT>(-y_, x_);
+  VectorXY GetPerpendicular(const bool clockwise = false) const {
+    return (clockwise) ? VectorXY(y_, -x_) : VectorXY(-y_, x_);
   }
 
   /**
@@ -251,7 +251,7 @@ public:
    * Normalizes the vector.
    * @return  Returns the address of the current vector.
    */
-  VectorXY<PrecisionT>& Normalize() {
+  VectorXY& Normalize() {
     // Normalize the vector if the norm is not 0 or 1
     PrecisionT n = Norm();
     if (n > kEpsilon && n != 1.0) {
@@ -267,7 +267,7 @@ public:
    * @param   w  Vector to determine component along.
    * @return  Returns the component of the current vector along w.
    */
-  PrecisionT Component(const VectorXY<PrecisionT>& w) const {
+  PrecisionT Component(const VectorXY& w) const {
     PrecisionT n = w.Dot(w);
     return (n != 0.0) ? (Dot(w) / n) : 0.0;
   }
@@ -278,7 +278,7 @@ public:
    * @param   w  Vector to determine projection along.
    * @return  Returns the new vector.
    */
-  VectorXY<PrecisionT> Projection(const VectorXY<PrecisionT>& w) const {
+  VectorXY Projection(const VectorXY& w) const {
     return w * Component(w);
   }
 
@@ -288,7 +288,7 @@ public:
    * @param   w  Vector to determine angle from current vector.
    * @return  Returns the angle in radians between the two vectors.
    */
-  PrecisionT AngleBetween(const VectorXY<PrecisionT>& w) const {
+  PrecisionT AngleBetween(const VectorXY& w) const {
     return acosf(Dot(w) / (Norm() * w.Norm()));
   }
 
@@ -300,8 +300,8 @@ public:
    * @param   normal  unit length normal to the vector where reflection occurs
    * @return  Returns the reflected vector
    */
-  VectorXY<PrecisionT> Reflect(const VectorXY<PrecisionT>& normal) const {
-    VectorXY<PrecisionT> d = *this;
+  VectorXY Reflect(const VectorXY& normal) const {
+    VectorXY d = *this;
     return (d - (normal * (2.0 * (d.Dot(normal)))));
   }
 

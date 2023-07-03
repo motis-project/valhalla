@@ -53,7 +53,7 @@
 [cxxopts]
   url=git@github.com:motis-project/cxxopts.git
   branch=master
-  commit=120205ac5a61d7e715f184fce0328ac5eb3d6712
+  commit=a68479e98d6694d4bcfc7af9fc09527888a740b6
 [just_gtfs]
   url=git@github.com:motis-project/just_gtfs.git
   branch=master
@@ -66,11 +66,11 @@
   url=git@github.com:motis-project/boost.git
   branch=master
   commit=ad6cbb38470efd74265715e0972cb5ae44527fb1
-[lua]
-  url=git@github.com:motis-project/lua.git
+[luajit]
+  url=git@github.com:motis-project/LuaJIT.git
   branch=master
-  commit=7bb93325b26f84c7e8b51fcbd857361ce7605a1d
+  commit=b4369853fcf2d2a94632a3f8a6351de5059aa5c9
 [spatialite]
   url=git@github.com:motis-project/spatialite.git
   branch=master
-  commit=045dfd39936e7184dbb6388babe5bf15f31b86e5
+  commit=8c39bcdc8b20638d60f8dee400075265c267c99f

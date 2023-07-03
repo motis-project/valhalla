@@ -77,4 +77,5 @@ add_library(valhalla-proto STATIC
 )
 add_library(valhalla::proto ALIAS valhalla-proto)
 target_include_directories(valhalla-proto PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/../..)
+target_compile_features(valhalla-proto PUBLIC cxx_std_20)
 target_link_libraries(valhalla-proto PUBLIC protobuf::libprotobuf)

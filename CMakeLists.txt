@@ -17,8 +17,8 @@ set(VALHALLA_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 set(VALHALLA_BUILD_DIR ${CMAKE_CURRENT_BINARY_DIR})
 list(INSERT CMAKE_MODULE_PATH 0 ${VALHALLA_SOURCE_DIR}/cmake)
 
-set(CMAKE_CXX_STANDARD 17 CACHE STRING "C++ language version to use (default is 17)")
-option(ENABLE_TOOLS "Enable Valhalla tools" OFF)
+set(CMAKE_CXX_STANDARD 20 CACHE STRING "C++ language version to use (default is 20)")
+option(ENABLE_TOOLS "Enable Valhalla tools" ON)
 option(ENABLE_DATA_TOOLS "Enable Valhalla data tools" OFF)
 option(ENABLE_SERVICES "Enable Valhalla services" OFF)
 option(ENABLE_HTTP "Enable the use of CURL" OFF)
@@ -133,34 +133,6 @@ include(cmake/pkg.cmake)
 
 ## Dependencies
 find_package(Threads REQUIRED)
-
-if (FALSE)
-  find_package(ZLIB REQUIRED)
-
-  # try to find an installed boost or install locally with conan
-  set(boost_VERSION "1.71")
-  find_package(Boost ${boost_VERSION} QUIET)
-  if (NOT Boost_FOUND)
-    # bail if there's no conan installed
-    message(STATUS "No compatible boost version detected, using conan...")
-    find_program(conan_FOUND conan)
-    if (NOT conan_FOUND)
-      message(FATAL_ERROR "conan needs to be installed for boost, see https://docs.conan.io/en/latest/installation.html.")
-    endif()
-
-    # build dir needs to be added, that's where conan writes some info
-    list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_BINARY_DIR})
-    list(APPEND CMAKE_PREFIX_PATH ${CMAKE_CURRENT_BINARY_DIR})
-    include(${VALHALLA_SOURCE_DIR}/cmake/conan.cmake)
-
-    conan_cmake_autodetect(settings)
-    conan_cmake_install(PATH_OR_REFERENCE ${VALHALLA_SOURCE_DIR}/conanfile.txt
-                        REMOTE conancenter
-                        SETTINGS ${settings}
-                        OUTPUT_QUIET)
-  endif()
-  find_package(Boost ${boost_VERSION} REQUIRED)
-endif()
 
 add_definitions(-DBOOST_NO_CXX11_SCOPED_ENUMS)
 add_definitions(-DBOOST_ALLOW_DEPRECATED_HEADERS)
@@ -291,12 +263,10 @@ if(ENABLE_TOOLS)
     add_executable(${program} ${path})
     set_target_properties(${program} PROPERTIES FOLDER "Tools")
     create_source_groups("Source Files" ${path})
-    target_link_libraries(${program} valhalla)
-    target_include_directories(${program} PUBLIC ${VALHALLA_SOURCE_DIR}/third_party/cxxopts/include)
+    target_link_libraries(${program} valhalla cxxopts::cxxopts)
     if(MSVC)
       target_link_libraries(${program} ${CURL_LIBRARIES})
     endif()
-    install(TARGETS ${program} DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT runtime)
   endforeach()
 endif()
 
@@ -306,8 +276,7 @@ if(ENABLE_DATA_TOOLS)
     add_executable(${program} ${path})
     create_source_groups("Source Files" ${path})
     set_target_properties(${program} PROPERTIES FOLDER "Data Tools")
-    target_include_directories(${program} PUBLIC ${VALHALLA_SOURCE_DIR}/third_party/cxxopts/include)
-    target_link_libraries(${program} valhalla)
+    target_link_libraries(${program} valhalla cxxopts::cxxopts)
     if (LUAJIT_FOUND AND APPLE AND CMAKE_HOST_SYSTEM_PROCESSOR STREQUAL "x86_64")
       # Using LuaJIT on macOS on Intel processors requires a couple of extra linker flags
       target_link_options(${program} PUBLIC -pagezero_size 10000 -image_base 100000000)
@@ -315,7 +284,6 @@ if(ENABLE_DATA_TOOLS)
     if(MSVC)
       target_link_libraries(${program} ${CURL_LIBRARIES})
     endif()
-    install(TARGETS ${program} DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT runtime)
   endforeach()
 
   # Target-specific dependencies
@@ -332,8 +300,7 @@ if(ENABLE_SERVICES)
     add_executable(${program} src/${program}.cc)
     create_source_groups("Source Files" src/${program}.cc)
     set_target_properties(${program} PROPERTIES FOLDER "Services")
-    target_link_libraries(${program} valhalla)
-    target_include_directories(${program} PUBLIC ${VALHALLA_SOURCE_DIR}/third_party/cxxopts/include)
+    target_link_libraries(${program} valhalla cxxopts::cxxopts)
     install(TARGETS ${program} DESTINATION "${CMAKE_INSTALL_BINDIR}" COMPONENT runtime)
   endforeach()
 endif()

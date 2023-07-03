@@ -59,6 +59,7 @@ struct valhalla_exception_t : public std::runtime_error {
  *                      already filled out, it will be validated and the json will be ignored
  */
 void ParseApi(const std::string& json_request, Options::Action action, Api& api);
+void from_json(rapidjson::Document& doc, Options::Action action, Api& api);
 #ifdef HAVE_HTTP
 /**
  * Take the json OR pbf request and parse/validate it. If you pass a protobuf mime type in the request

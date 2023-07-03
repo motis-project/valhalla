@@ -570,6 +570,10 @@ void parse_contours(const rapidjson::Document& doc,
   }
 }
 
+} // namespace
+
+namespace valhalla {
+
 /**
  * This function takes a json document and parses it into an options (request pbf) object.
  * The implementation is such that if you passed an already filled out options object the
@@ -1159,10 +1163,6 @@ void from_json(rapidjson::Document& doc, Options::Action action, Api& api) {
   doc.AddMember({"format", allocator},
                 {valhalla::Options_Format_Enum_Name(options.format()), allocator}, allocator);
 }
-
-} // namespace
-
-namespace valhalla {
 
 valhalla_exception_t::valhalla_exception_t(unsigned code, const std::string& extra)
     : std::runtime_error("") {
