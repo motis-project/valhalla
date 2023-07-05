@@ -10,6 +10,7 @@
 #include "mjolnir/ferry_connections.h"
 #include "mjolnir/node_expander.h"
 #include "mjolnir/util.h"
+#include "utl/progress_tracker.h"
 
 using namespace valhalla::baldr;
 
@@ -29,9 +30,9 @@ struct LinkGraphNode {
   node_bundle bundle;      // Info about node edges
   bool has_exit;
 
-  std::vector<uint32_t> parents;       // Indices of parent nodes in the graph (don't confuse
-                                       // these with node indices in the sequence!)
-  std::vector<uint32_t> parents_edges; // Indices of parent edges in the sequence
+  std::vector<uint32_t> parents;        // Indices of parent nodes in the graph (don't confuse
+                                        // these with node indices in the sequence!)
+  std::vector<uint32_t> parents_edges;  // Indices of parent edges in the sequence
 
   std::vector<uint32_t> children;       // Indices of children nodes in the graph (don't confuse
                                         // these with node indices in the sequence!)
@@ -887,6 +888,8 @@ void ReclassifyLinks(const std::string& ways_file,
                      const std::string& way_nodes_file,
                      const OSMData& osmdata,
                      bool infer_turn_channels) {
+  auto const progress_tracker = utl::get_active_progress_tracker();
+  progress_tracker->status("Reclassifying links").out_bounds(39, 40).in_high(1);
   LOG_INFO("Reclassifying_V2 link graph edges...");
 
   Data data(nodes_file, edges_file, ways_file, way_nodes_file, osmdata);
@@ -914,6 +917,7 @@ void ReclassifyLinks(const std::string& ways_file,
 
   LOG_INFO("Finished with " + std::to_string(reclass_count) + " reclassified. " +
            " Turn channel count = " + std::to_string(tc_count));
+  progress_tracker->increment();
 }
 
 } // namespace mjolnir

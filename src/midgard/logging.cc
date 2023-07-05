@@ -152,8 +152,8 @@ public:
     // though, we make sure to only call the << operator once on std::cout
     // otherwise the << operators from different threads could interleave
     // obviously we dont care if flushes interleave
-    std::cout << output;
-    std::cout.flush();
+    std::clog << output;
+    std::clog.flush();
 #endif
   }
 
@@ -178,8 +178,8 @@ class StdErrLogger : public StdOutLogger {
     output.append(custom_directive);
     output.append(message);
     output.push_back('\n');
-    std::cerr << output;
-    std::cerr.flush();
+    std::clog << output;
+    std::clog.flush();
 #endif
   }
 };

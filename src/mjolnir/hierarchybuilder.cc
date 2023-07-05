@@ -594,17 +594,21 @@ void HierarchyBuilder::Build(const boost::property_tree::ptree& pt,
   GraphReader reader(pt.get_child("mjolnir"));
 
   // Association of old nodes to new nodes
+  LOG_INFO("CreateNodeAssociations");
   CreateNodeAssociations(reader, new_to_old_file, old_to_new_file);
 
   // Sort the sequences
+  LOG_INFO("SortSequences");
   SortSequences(new_to_old_file, old_to_new_file);
 
   // Iterate through the hierarchy (from highway down to local) and build
   // new tiles
+  LOG_INFO("FormTilesInNewLevel");
   FormTilesInNewLevel(reader, new_to_old_file, old_to_new_file);
 
   // Remove any base tiles that no longer have any data (nodes and edges
   // only exist on arterial and highway levels)
+  LOG_INFO("RemoveUnusedLocalTiles");
   RemoveUnusedLocalTiles(reader.tile_dir(), old_to_new_file);
 
   // Update the end nodes to all transit connections in the transit hierarchy

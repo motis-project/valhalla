@@ -7,6 +7,8 @@
 #include <boost/format.hpp>
 #include <boost/range/algorithm/remove_if.hpp>
 
+#include "utl/progress_tracker.h"
+
 #include "baldr/complexrestriction.h"
 #include "baldr/datetime.h"
 #include "baldr/graphconstants.h"
@@ -2593,8 +2595,8 @@ public:
                 } else {
                   return; // should not make it here; has to be bad data.
                 }
-              } // else
-            }   // if (condition.empty())
+              }           // else
+            }             // if (condition.empty())
 
             std::vector<std::string> conditions = GetTagTokens(condition, ';');
 
@@ -3072,6 +3074,8 @@ OSMData PBFGraphParser::ParseWays(const boost::property_tree::ptree& pt,
   // Parse the ways and find all node Ids needed (those that are part of a
   // way's node list. Iterate through each pbf input file.
   LOG_INFO("Parsing ways...");
+  auto const progress_tracker = utl::get_active_progress_tracker();
+  progress_tracker->status("Parse Ways").out_bounds(0.F, 22.F);
   for (auto& file_handle : file_handles) {
     callback.current_way_node_index_ = callback.last_node_ = callback.last_way_ =
         callback.last_relation_ = 0;
@@ -3089,6 +3093,7 @@ OSMData PBFGraphParser::ParseWays(const boost::property_tree::ptree& pt,
   callback.reset(nullptr, nullptr, nullptr, nullptr, nullptr, nullptr, nullptr);
 
   // we need to sort the access tags so that we can easily find them.
+  progress_tracker->status("Sorting  ways").out_bounds(22.F, 23.F).in_high(1);
   LOG_INFO("Sorting osm access tags by way id...");
   {
     sequence<OSMAccess> access(access_file, false);
@@ -3104,6 +3109,7 @@ OSMData PBFGraphParser::ParseWays(const boost::property_tree::ptree& pt,
   }
 
   LOG_INFO("Finished");
+  progress_tracker->increment();
 
   // Return OSM data
   osmdata.initialized = true;
@@ -3129,6 +3135,7 @@ void PBFGraphParser::ParseRelations(const boost::property_tree::ptree& pt,
   if (!osmdata.initialized)
     callback.osmdata_.read_from_temp_files(pt.get<std::string>("tile_dir"));
 
+  auto const progress_tracker = utl::get_active_progress_tracker();
   LOG_INFO("Parsing files for relations: " + boost::algorithm::join(input_files, ", "));
 
   // hold open all the files so that if something else (like diff application)
@@ -3147,6 +3154,7 @@ void PBFGraphParser::ParseRelations(const boost::property_tree::ptree& pt,
 
   // Parse relations.
   LOG_INFO("Parsing relations...");
+  progress_tracker->status("Parsing relations").out_bounds(23, 26);
   for (auto& file_handle : file_handles) {
     callback.current_way_node_index_ = callback.last_node_ = callback.last_way_ =
         callback.last_relation_ = 0;
@@ -3244,6 +3252,8 @@ void PBFGraphParser::ParseNodes(const boost::property_tree::ptree& pt,
   // Parse node in all the input files. Skip any that are not marked from
   // being used in a way.
   // TODO: we know how many knows we expect, stop early once we have that many
+  auto const progress = utl::get_active_progress_tracker();
+  progress->status("Parsing nodes").out_bounds(26, 35);
   LOG_INFO("Parsing nodes...");
   for (auto& file_handle : file_handles) {
     // each time we parse nodes we have to run through the way nodes file from the beginning because
@@ -3265,6 +3275,8 @@ void PBFGraphParser::ParseNodes(const boost::property_tree::ptree& pt,
   // we need to sort the refs so that we easily iterate over them for building edges
   // so we line them first by way index then by shape index of the node
   LOG_INFO("Sorting osm way node references by way index and node shape index...");
+  auto const progress_tracker = utl::get_active_progress_tracker();
+  progress_tracker->status("Sorting ways").out_bounds(36, 37);
   {
     sequence<OSMWayNode> way_nodes(way_nodes_file, false);
     way_nodes.sort([](const OSMWayNode& a, const OSMWayNode& b) {

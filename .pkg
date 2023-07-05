@@ -70,3 +70,7 @@
   url=git@github.com:motis-project/spatialite.git
   branch=master
   commit=7b8cd6447ac8632bd2c6c8ff9fbc10151742ef18
+[utl]
+  url=git@github.com:motis-project/utl.git
+  branch=master
+  commit=bfee00828c75e740b60ab403202988890b8e3f55

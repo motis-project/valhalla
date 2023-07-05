@@ -6,6 +6,8 @@
 #include <boost/algorithm/string.hpp>
 #include <boost/format.hpp>
 
+#include "utl/progress_tracker.h"
+
 #include "filesystem.h"
 
 #include "baldr/datetime.h"
@@ -42,6 +44,8 @@ namespace {
  */
 std::map<GraphId, size_t> SortGraph(const std::string& nodes_file, const std::string& edges_file) {
   LOG_INFO("Sorting graph...");
+  auto const progress_tracker = utl::get_active_progress_tracker();
+  progress_tracker->status("Sorting graph").out_bounds(38, 39).in_high(1);
 
   // Sort nodes by graphid then by osmid, so its basically a set of tiles
   sequence<Node> nodes(nodes_file, false);
@@ -140,6 +144,7 @@ std::map<GraphId, size_t> SortGraph(const std::string& nodes_file, const std::st
   filesystem::remove(end_node_edge_file);
 
   LOG_INFO("Finished with " + std::to_string(node_count) + " graph nodes");
+  progress_tracker->increment();
   return tiles;
 }
 
@@ -151,6 +156,8 @@ void ConstructEdges(const std::string& ways_file,
                     const std::function<GraphId(const OSMNode&)>& graph_id_predicate,
                     const bool infer_turn_channels) {
   LOG_INFO("Creating graph edges from ways...");
+  auto const progress_tracker = utl::get_active_progress_tracker();
+  progress_tracker->status("Creating graph").out_bounds(37, 38).in_high(1);
 
   // so we can read ways and nodes and write edges
   sequence<OSMWay> ways(ways_file, false);
@@ -277,6 +284,7 @@ void ConstructEdges(const std::string& ways_file,
     }
   }
   LOG_INFO("Finished with " + std::to_string(edges.size()) + " graph edges");
+  progress_tracker->increment();
 }
 
 uint32_t CreateSimpleTurnRestriction(const uint64_t wayid,
@@ -1270,9 +1278,9 @@ std::string GraphBuilder::GetRef(const std::string& way_ref, const std::string& 
     for (const auto& refdir : refdirs) {
       std::vector<std::string> tmp = GetTagTokens(refdir, '|'); // US 51|north
       if (tmp.size() == 2) {
-        if (tmp[0] == ref) { // US 51 == US 51
+        if (tmp[0] == ref) {                                    // US 51 == US 51
           if (!refs.empty()) {
-            refs += ";" + ref + " " + tmp[1]; // ref order of the way wins.
+            refs += ";" + ref + " " + tmp[1];                   // ref order of the way wins.
           } else {
             refs = ref + " " + tmp[1];
           }
@@ -1283,7 +1291,7 @@ std::string GraphBuilder::GetRef(const std::string& way_ref, const std::string& 
           std::vector<std::string> sign1 = GetTagTokens(tmp[0], ' ');
           std::vector<std::string> sign2 = GetTagTokens(ref, ' ');
           if (sign1.size() == 2 && sign2.size() == 2) {
-            if (sign1[1] == sign2[1]) { // 747 == 747
+            if (sign1[1] == sign2[1]) {           // 747 == 747
               if (!refs.empty()) {
                 refs += ";" + ref + " " + tmp[1]; // ref order of the way wins.
               } else {

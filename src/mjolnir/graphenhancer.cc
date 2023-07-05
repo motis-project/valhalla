@@ -26,6 +26,9 @@
 #include <boost/geometry/io/wkt/wkt.hpp>
 #include <boost/geometry/multi/geometries/multi_polygon.hpp>
 
+#include "utl/progress_tracker.h"
+#include "utl/raii.h"
+
 #include "baldr/datetime.h"
 #include "baldr/graphconstants.h"
 #include "baldr/graphid.h"
@@ -218,7 +221,7 @@ bool ProcessLanes(bool isLeft, bool endOnTurn, std::vector<uint16_t>& enhanced_t
         else
           bUpdated = false; // should end on a through
         break;
-      } else { // anything else then no update.
+      } else {              // anything else then no update.
         bUpdated = false;
         break;
       }
@@ -1350,6 +1353,8 @@ void enhance(const boost::property_tree::ptree& pt,
   const auto& local_level = TileHierarchy::levels().back().level;
   const auto& tiles = TileHierarchy::levels().back().tiles;
 
+  auto const progress_tracker = utl::get_active_progress_tracker();
+
   // Iterate through the tiles in the queue and perform enhancements
   while (true) {
     // Get the next tile Id from the queue and get writeable and readable
@@ -1361,6 +1366,8 @@ void enhance(const boost::property_tree::ptree& pt,
     }
     GraphId tile_id = tilequeue.front();
     tilequeue.pop();
+
+    UTL_FINALLY([&]() { progress_tracker->increment(); });
 
     // Get a readable tile.If the tile is empty, skip it. Empty tiles are
     // added where ways go through a tile but no end not is within the tile.
@@ -1777,6 +1784,9 @@ void GraphEnhancer::Enhance(const boost::property_tree::ptree& pt,
   std::random_device rd;
   std::shuffle(tempqueue.begin(), tempqueue.end(), std::mt19937(rd()));
   std::queue<GraphId> tilequeue(tempqueue);
+
+  auto const progress_tracker = utl::get_active_progress_tracker();
+  progress_tracker->status("Enhancing graph").out_bounds(40.F, 90.F).in_high(tilequeue.size());
 
   // An atomic object we can use to do the synchronization
   std::mutex lock;

@@ -37,6 +37,8 @@
 #include <vector>
 #include <zlib.h>
 
+#include "utl/progress_tracker.h"
+
 #include "midgard/logging.h"
 #include "mjolnir/osmpbfparser.h"
 
@@ -291,6 +293,12 @@ void Parser::parse(std::ifstream& file, const Interest interest, Callback& callb
 
   // start from the top
   file.clear();
+
+  // get size
+  auto const progress_tracker = utl::get_active_progress_tracker();
+  file.seekg(0, std::ios_base::end);
+  progress_tracker->in_high(file.tellg());
+
   file.seekg(0, std::ios::beg);
 
   // while there is more to read
@@ -312,6 +320,8 @@ void Parser::parse(std::ifstream& file, const Interest interest, Callback& callb
         LOG_WARN("Unknown blob type: " + header.type());
       }
     }
+
+    progress_tracker->update(file.tellg());
   }
 
   // done with protobuf and buffers

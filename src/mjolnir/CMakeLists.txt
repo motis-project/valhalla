@@ -85,4 +85,5 @@ valhalla_module(NAME mjolnir
     robin_hood::robin_hood
     rapidjson
     just_gtfs
+    utl
     $<$<BOOL:${WIN32}>:dirent>)
