@@ -6,6 +6,7 @@
 
 #include <future>
 #include <queue>
+#include <set>
 #include <thread>
 
 #include <boost/algorithm/string.hpp>
