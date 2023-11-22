@@ -62,10 +62,10 @@
   url=git@github.com:motis-project/boost.git
   branch=master
   commit=ad6cbb38470efd74265715e0972cb5ae44527fb1
-[luajit]
+[luaJIT]
   url=git@github.com:motis-project/LuaJIT.git
   branch=v2.1
-  commit=4638e9198beb2f14bd1c90b42aff744469eed404
+  commit=babeae2c3311bed245ee86f3e35a1f244e3da60b
 [spatialite]
   url=git@github.com:motis-project/spatialite.git
   branch=master
