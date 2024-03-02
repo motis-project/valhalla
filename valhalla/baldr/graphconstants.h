@@ -5,6 +5,7 @@
 #include <limits>
 #include <string>
 #include <unordered_map>
+#include <cstdint>
 
 namespace valhalla {
 namespace baldr {
