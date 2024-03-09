@@ -69,7 +69,7 @@
 [spatialite]
   url=git@github.com:motis-project/spatialite.git
   branch=master
-  commit=7b8cd6447ac8632bd2c6c8ff9fbc10151742ef18
+  commit=59c4c50a3148bfe5316ecdbe7c256a6c5727f6c1
 [utl]
   url=git@github.com:motis-project/utl.git
   branch=master
